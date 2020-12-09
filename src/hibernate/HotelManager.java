@@ -1,67 +1,104 @@
 package hibernate;
 
-import java.util.List;
-
-import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
-
+import java.util.Scanner;
 
 public class HotelManager {
 
-	private static SessionFactory getSessionFactory() {
-		 SessionFactory sessionFactory = new Configuration().addAnnotatedClass(ClientePOJO.class).configure().buildSessionFactory();
-		 return sessionFactory;
-		 } 
-	
-	public static void create(ClientePOJO p) {
-		 Session sessionObj = getSessionFactory().openSession();
-		 Transaction transObj = sessionObj.beginTransaction();
-		 sessionObj.save(p);
-		 transObj.commit();
-		 sessionObj.close();
-		 System.out.println("Persona " + p.getIdCliente() + " insertada correctamente");
-		} 
-	
-	public static List readClientes() {
-		 Session sessionObj = getSessionFactory().openSession();
-		 String query = "FROM Pelicula";
-		 List resultado = sessionObj.createQuery(query).list();
-		 sessionObj.close();
-		 return resultado;
-		 } 
-	
-	public static void updatePelicula(ClientePOJO cliente) {
-		 Session sessionObj = getSessionFactory().openSession();
-		 Transaction transObj = sessionObj.beginTransaction();
-		 ClientePOJO clienteBD = (ClientePOJO)sessionObj.load(ClientePOJO.class, cliente.getIdCliente());
-		 /* Modificamos todos los atributos */
-		 clienteBD.setNombre(cliente.getNombre());
-		 clienteBD.setApellidos(cliente.getApellidos());
-		 clienteBD.setEmail(cliente.getEmail());
-		 clienteBD.setDni(cliente.getDni());
-		 clienteBD.setClave(cliente.getClave());
-		 transObj.commit();
-		 sessionObj.close();
-		 System.out.println("Actualizado correctamente");
-		 }
-	
-	 public static void deletePelicula(ClientePOJO cliente) {
-		 Session sessionObj = getSessionFactory().openSession();
-		 Transaction transObj = sessionObj.beginTransaction();
-		 ClientePOJO clienteBD = (ClientePOJO) sessionObj.load(ClientePOJO.class, cliente.getIdCliente());
-		 sessionObj.delete(clienteBD);
-		transObj.commit();
-		 sessionObj.close();
-		 System.out.println("Eliminado correctamente");
-		 }
 	public static void main(String[] args) {
+		Scanner teclado = new Scanner(System.in);
+		ClientePOJO ac = new ClientePOJO();
+		int opcion;
+		String cli;
+		int id;
 		
-		ClientePOJO ac = new ClientePOJO("María José", "Martínez", "mjmartinez@grupostudium.com", "12345678Z",
-				"Studium2020");
+		do
+		{
+			
+			System.out.println("Menú");
+			System.out.println(" ");
+			System.out.println("1 - Crear Cliente");
+			System.out.println("2 - Leer Datos Cliente");
+			System.out.println("3 - Actualizar Cliente");
+			System.out.println("4 - Eliminar Cliente");
+			System.out.println("5 - Salir de la aplicación");
+			
+			
+			opcion = teclado.nextInt();
+			
+			if(opcion == 1)
+			{
+				System.out.println("**** Crear Cliente ****");
+				
+				System.out.println("Inserte el nombre del cliente: ");
+				cli = teclado.next();
+				ac.setNombre(cli);
+				
+				System.out.println("Inserte el 1º apellido: ");
+				String cli1P = teclado.next();
 				
 				
-				create(ac);
+				System.out.println("Inserte el 2º apellido: ");
+				String cli2P = teclado.next();
+				String cli3 = cli1P + " "+ cli2P ;
+				ac.setApellidos(cli3);
 				
+				System.out.println("Inserte el E-mail del cliente: ");
+				cli = teclado.next();
+				ac.setEmail(cli);
+				
+				System.out.println("Inserte el DNI del cliente: ");
+				cli = teclado.next();
+				ac.setDni(cli);
+				
+				System.out.println("Inserte la Clave del cliente: ");
+				cli = teclado.next();
+				ac.setClave(cli);
+				
+				Persistencia.create(ac);
+				
+			}
+			else if(opcion == 2)
+			{
+				System.out.println("**** Leer Datos del Cliente ****");
+				System.out.println("Inserte id del cliente: ");
+				id = teclado.nextInt();
+				
+				Persistencia.readClientes(id);
+				
+			}
+			else if (opcion == 3)
+			{
+				System.out.println("**** Actualizar Cliente ****");
+				System.out.println("Inserte id del cliente: ");
+				id = teclado.nextInt();
+				System.out.println("Inserte el nuevo 1º apellido del cliente: ");
+				String ap1 = teclado.next();
+				System.out.println("Inserte el nuevo 2º apellido del cliente: ");
+				String ap2 = teclado.next();
+				String ap3 = ap1 + " " + ap2;
+				
+				Persistencia.updateCliente(ac,id,ap3);
+				
+			}
+			else if (opcion == 4)
+			{
+				System.out.println("**** Eliminar Cliente ****");
+				System.out.println("Inserte id del cliente: ");
+				id = teclado.nextInt();
+				
+				Persistencia.deleteCliente(ac,id);
+			}
+			else if (opcion == 5)
+			{
+				 System.out.println("Salió del menu");
+				 teclado.close();
+			}
+			else
+			{
+				System.err.println("Inserte solo los números del 1 al 5");
+			}
+		}
+		while(opcion != 5);
 
 	}
 
