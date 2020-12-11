@@ -13,7 +13,7 @@ public class HotelManager {
 		
 		do
 		{
-			
+			System.out.println(" ");
 			System.out.println("Menú");
 			System.out.println(" ");
 			System.out.println("1 - Crear Cliente");
